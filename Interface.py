@@ -3,9 +3,6 @@ from tkinter import *
 from time import *
 import math
         
-        #a = get_parameters.carregar_longitude()
-        #print("Oi")
-
 class Tela:
 
     def __init__(self,root):
@@ -55,23 +52,17 @@ class Tela:
         self.foto.pack(side= RIGHT)
         self.relogio.pack(side=LEFT)
         self.atualizar.pack()
-        #self.camera1.pack()
 
     #Cria button_automatico
-        self.automatic = False
-        self.button_automatico = Checkbutton(self.coordenadas,bd = 4,relief = "raise",text = "Funcionamento Automático",command= self.TrocaModo,font=self.font2)
-        if self.automatic:
-            self.informacoes()
+        self.automatic = True
+        self.button_automatico = Button(self.coordenadas,bd = 4,relief = "raise",text = "Funcionamento Automático",command= self.TrocaModo,font=self.font2)
         self.button_automatico.pack(side=LEFT)
-
-    # Cria botão abrir
-        self.construir_ccd1()
 
     #Cria botão OK
         self.button_ok = Button(self.editar,bd = 4,relief = "raise", text = "OK",font= self.font2,command= self.Mudar_valores)
                 
     #Cria botão EDIT
-        self.edit = False
+        self.edit = True
         self.button_editar = Button(self.editar,bd = 4,relief = "raise", text = "Editar Coordenadas",font= self.font2,command= self.Editar_coordenadas)
         self.button_editar.pack(side = LEFT)
 
@@ -81,6 +72,7 @@ class Tela:
         self.t22 = Label(self.editar,text="Longitude ",font= self.font2)
         self.e22 = Entry(self.editar,font= self.font2)
 
+
     #CRIA NOTIFICAÇÃO DE ENTRADA INVÁLIDA
         self.entrada_invalida = Label(self.editar, text = "ENTRADA INVÁLIDA",font= self.font2)
 
@@ -89,11 +81,19 @@ class Tela:
         self.calculo_solar()
         self.hora_now = round(float(float(strftime('%M'))/60)+float(strftime('%H')),2) 
 
+       
         if self.por_sol_h > self.hora_now:
             if self.hora_now > self.nascer_sol_h:
                 self.dia = True
         else:
              self.dia = False
+
+    # Cria botões de abrir e fechar para o modo automático
+        self.construir_ccd1()
+        self.TrocaModo()
+        #self.informacoes()
+        #self.Apagar_entradas()
+        #self.destruir_ccd1()
         self.tac()
         
     def tac(self):
@@ -129,13 +129,17 @@ class Tela:
             print(self.dia)
             self.foto_noite()
             
-        if self.automatic == True:
+        if self.automatic == False:
             self.estado_automatico()
         else:
             self.estado_manual()
         
     def estado_automatico(self):
         print("chama função automatica")
+        return()
+
+    def estado_manual(self):
+        print("chama função manual")
         return()
 
     def construir_ccd1(self):
@@ -175,10 +179,7 @@ class Tela:
         self.button_abrir.destroy()
         self.button_abrir2.destroy()
         self.button_abrir3.destroy()
-        
-    def estado_manual(self):
-        print("chama função manual")
-        return()
+   
     
     def calculo_solar(self):
         #cálculo de duração do dia
@@ -227,15 +228,13 @@ class Tela:
         self.long = Label(self.longitude1,text=[self.long],font= self.font2)
         self.long.pack(side=RIGHT)
         self.longitude1.pack(side=RIGHT)
-        #teste
-        self.button_abrir.pack_forget()
         self.label_foto.pack()
 
     def Apagar_informacoes(self):
         self.latitude1.pack_forget()
         self.longitude1.pack_forget()
         self.entrada_invalida.pack_forget()
-
+   
         
     def isnumber(self,value):
         self.value = value
@@ -261,6 +260,7 @@ class Tela:
         self.t11.pack(side = LEFT)
         self.e11.pack(side= LEFT)
         self.button_ok.pack(side = RIGHT)
+        return()
 
     def Apagar_entradas(self):
         self.e11.pack_forget()
@@ -269,6 +269,8 @@ class Tela:
         self.t22.pack_forget()
         self.button_ok.pack_forget()
         self.entrada_invalida.pack_forget()
+        self.destruir_ccd1()
+        return()
         
     def Editar_coordenadas(self):
         self.edit = not self.edit
@@ -279,15 +281,15 @@ class Tela:
                  self.Apagar_entradas()
      
     def TrocaModo(self):
-        self.automatic = not self.automatic
-        if self.automatic:
+        if self.automatic == True:
             self.informacoes()
             self.Apagar_entradas()
-            self.destruir_ccd1()
+            
         else:
             self.Apagar_informacoes()
             self.construir_ccd1()
 
+        self.automatic = not self.automatic
 
 root = Tk()
 root.geometry("1280x720+0+0")        
