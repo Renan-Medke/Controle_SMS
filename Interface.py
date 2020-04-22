@@ -18,12 +18,15 @@ class Tela:
         self.relogio = Frame(self.atualizar,bd = 4, relief = "raise")
 
         self.clock = Frame(self.relogio,bd = 4, relief = "raise")
-        self.nome_relogio = Label(self.clock,text = "Horário de Brasília",font=self.font2)
-        self.nome_relogio.pack(side=TOP)
+        self.data = Label(self.clock,text = "DATA",font=self.font2)
+        self.data.pack(side=TOP)
 
         self.relogio_layout = Label(self.clock,font=self.font2)
         self.relogio_layout.pack()
         self.clock.pack()
+        
+        self.nome_relogio = Label(self.clock,text = "Horário de Brasília",font=self.font2)
+        self.nome_relogio.pack(side=TOP)
  
         self.Nascer = Frame(self.relogio,bd = 4, relief = "raise")
         self.nascer_do_sol = Label(self.Nascer,text = "Nascer do Sol:",font=self.font2)
@@ -91,9 +94,6 @@ class Tela:
     # Cria botões de abrir e fechar para o modo automático
         self.construir_ccd1()
         self.TrocaModo()
-        #self.informacoes()
-        #self.Apagar_entradas()
-        #self.destruir_ccd1()
         self.tac()
         
     def tac(self):
@@ -105,7 +105,7 @@ class Tela:
             self.calculo_solar()
             print("mudou o dia, mais uma oportunidade pra fazer cagada!")
             self.calculo_solar()
-
+        self.data['text'] = strftime('%d/%m/%Y')
         self.relogio_layout['text'] = strftime('%H:%M:%S')
         self.dia_anterior = int(strftime('%j'))
         self.hora_now = round(float(float(strftime('%M'))/60)+float(strftime('%H')),5) 
@@ -273,12 +273,13 @@ class Tela:
         return()
         
     def Editar_coordenadas(self):
-        self.edit = not self.edit
-        if self.automatic == False:
+         if self.automatic == False:
             if self.edit:
                 self.Entrada_coordenadas() 
             else:
                  self.Apagar_entradas()
+
+         self.edit = not self.edit
      
     def TrocaModo(self):
         if self.automatic == True:
