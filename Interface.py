@@ -2,6 +2,7 @@ import get_parameters
 from tkinter import *
 from time import *
 import math
+#import smtplib
         
 class Tela:
 
@@ -58,6 +59,7 @@ class Tela:
 
     #Cria button_automatico
         self.automatic = True
+        print(self.automatic)
         self.button_automatico = Button(self.coordenadas,bd = 4,relief = "raise",text = "Funcionamento Automático",command= self.TrocaModo,font=self.font2)
         self.button_automatico.pack(side=LEFT)
 
@@ -65,7 +67,7 @@ class Tela:
         self.button_ok = Button(self.editar,bd = 4,relief = "raise", text = "OK",font= self.font2,command= self.Mudar_valores)
                 
     #Cria botão EDIT
-        self.edit = True
+        self.edit = False
         self.button_editar = Button(self.editar,bd = 4,relief = "raise", text = "Editar Coordenadas",font= self.font2,command= self.Editar_coordenadas)
         self.button_editar.pack(side = LEFT)
 
@@ -93,14 +95,28 @@ class Tela:
 
     # Cria botões de abrir e fechar para o modo automático
         self.construir_ccd1()
-        self.TrocaModo()
+
+        if self.automatic == True:
+            #self.informacoes()
+            self.Apagar_entradas()
+            self.destruir_ccd1()
+            self.automatic = True
+                        
+        else:
+            
+            self.informacoes()
+            self.Apagar_informacoes()
+            self.automatic = False
+        
         self.tac()
         
     def tac(self):
         self.teste()           
         root.after(1000,self.tac)
         
+    #trabalhadno aqui
     def teste(self):
+       
         if self.dia_anterior != int(strftime('%j')):
             self.calculo_solar()
             print("mudou o dia, mais uma oportunidade pra fazer cagada!")
@@ -129,17 +145,20 @@ class Tela:
             print(self.dia)
             self.foto_noite()
             
-        if self.automatic == False:
+        if self.automatic == True:
             self.estado_automatico()
         else:
             self.estado_manual()
+    #trabalhadno até aqui
         
     def estado_automatico(self):
         print("chama função automatica")
+        #print(get_parameters.carregar_estado())
         return()
 
     def estado_manual(self):
         print("chama função manual")
+        #print(get_parameters.carregar_estado())
         return()
 
     def construir_ccd1(self):
@@ -173,6 +192,7 @@ class Tela:
         self.button_abrir3 = Button(self.foto, text = "ABRIR",font= self.font2,width = 6,height=1,bd = 4,relief = "raise",) 
         self.button_abrir3.pack()
         self.button_abrir3.place(x = 250, y = 153)
+        return()
 
      
     def destruir_ccd1(self):
@@ -269,7 +289,6 @@ class Tela:
         self.t22.pack_forget()
         self.button_ok.pack_forget()
         self.entrada_invalida.pack_forget()
-        self.destruir_ccd1()
         return()
         
     def Editar_coordenadas(self):
@@ -277,21 +296,24 @@ class Tela:
             if self.edit:
                 self.Entrada_coordenadas() 
             else:
-                 self.Apagar_entradas()
+                self.Apagar_entradas() 
 
          self.edit = not self.edit
      
     def TrocaModo(self):
         if self.automatic == True:
-            self.informacoes()
             self.Apagar_entradas()
-            
+            self.destruir_ccd1()
+            self.informacoes()
+            self.automatic = False
+            get_parameters.salvar_estado(str(self.automatic))
+                        
         else:
-            self.Apagar_informacoes()
             self.construir_ccd1()
-
-        self.automatic = not self.automatic
-
+            self.Apagar_informacoes()
+            self.automatic = True
+            get_parameters.salvar_estado(str(self.automatic))
+            
 root = Tk()
 root.geometry("1280x720+0+0")        
 root.configure(background='#04E669')

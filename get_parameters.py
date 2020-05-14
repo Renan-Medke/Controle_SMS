@@ -11,12 +11,31 @@ def carregar_longitude():
         f.close()
         return(s)
 
+def carregar_estado():
+        f = open('parametros.txt', 'r')
+        s = f.readline()
+        s = f.readline()
+        s = f.readline()
+        f.close()
+        return(s)
+
+def salvar_estado(estado):
+        a=carregar_latitude()
+        b=carregar_longitude()
+        f = open('parametros.txt', 'w')
+        f.write(a)
+        f.write(b)
+        f.write(str(estado))
+        return()
+
 def salvar_coordenadas(latitude,longitude):
+        c = carregar_estado()
         f = open('parametros.txt', 'w')
         f.write(latitude)
         f.write('\n')
         f.write(longitude)
-        f.close()
+        f.write('\n')
+        f.write(c)
         return()
 
 '''
